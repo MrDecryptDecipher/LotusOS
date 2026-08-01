@@ -1,3 +1,4 @@
+import "./env.js";
 import { router } from "./routes/index.js";
 
 const PORT = parseInt(process.env.BACKEND_PORT || "3001", 10);
