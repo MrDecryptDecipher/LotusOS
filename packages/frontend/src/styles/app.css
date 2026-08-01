@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-[#fbfcf8] text-[#183b38] antialiased; }
+  ::selection { background: #c5dfce; color: #183b38; }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "lotus-os",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter '*' dev",
+    "build": "bun run --filter '*' build",
+    "typecheck": "bun run --filter '*' typecheck",
+    "lint": "echo 'lint: no linter configured yet'"
+  }
+}
