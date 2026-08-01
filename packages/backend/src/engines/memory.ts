@@ -1,6 +1,6 @@
 import { getDb } from "../db.js";
 import { memories } from "../db/schema.js";
-import { getAI, EMBEDDING_MODEL, EMBEDDING_DIMS } from "../lib/openai.js";
+import { getAI, EMBEDDING_MODEL } from "../lib/openai.js";
 
 export type Memory = typeof memories.$inferSelect;
 export type MemorySource = "conversation" | "reflection" | "journal" | "explicit";
