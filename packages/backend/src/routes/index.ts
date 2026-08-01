@@ -1,5 +1,6 @@
 import { healthHandler } from "./health.js";
 import { dbHealthHandler } from "./db-health.js";
+import { storeMemoryHandler, searchMemoriesHandler, listMemoriesHandler, consolidateHandler, decayHandler } from "./memories.js";
 
 export type Handler = (
   req: Request
@@ -8,6 +9,11 @@ export type Handler = (
 const routes: Record<string, Handler> = {
   "GET /api/health": healthHandler,
   "GET /api/db-health": dbHealthHandler,
+  "POST /api/memories": storeMemoryHandler,
+  "GET /api/memories/search": searchMemoriesHandler,
+  "POST /api/memories/consolidate": consolidateHandler,
+  "POST /api/memories/decay": decayHandler,
+  "GET /api/memories": listMemoriesHandler,
 };
 
 export function router(req: Request): Response | Promise<Response> {
