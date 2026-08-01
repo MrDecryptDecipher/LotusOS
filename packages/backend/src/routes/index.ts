@@ -2,6 +2,7 @@ import { healthHandler } from "./health.js";
 import { dbHealthHandler } from "./db-health.js";
 import { storeMemoryHandler, searchMemoriesHandler, listMemoriesHandler, consolidateHandler, decayHandler } from "./memories.js";
 import { conversationsHandler } from "./conversations.js";
+import { reflectionsHandler } from "./reflections.js";
 
 export type Handler = (
   req: Request
@@ -18,6 +19,11 @@ const routes: Record<string, Handler> = {
   // Static conversation routes (exact-match only; dynamic :id routes hit the prefix fallback below)
   "POST /api/conversations": conversationsHandler,
   "GET /api/conversations": conversationsHandler,
+  // Static reflection routes (exact-match only; dynamic :id routes hit the prefix fallback below)
+  "POST /api/reflections": reflectionsHandler,
+  "POST /api/reflections/periodic": reflectionsHandler,
+  "POST /api/reflections/extract-memories": reflectionsHandler,
+  "GET /api/reflections": reflectionsHandler,
 };
 
 export function router(req: Request): Response | Promise<Response> {
@@ -29,6 +35,11 @@ export function router(req: Request): Response | Promise<Response> {
   // Dynamic conversation routes: /api/conversations/:id[/...]
   if (url.pathname.startsWith("/api/conversations/")) {
     return conversationsHandler(req);
+  }
+
+  // Dynamic reflection routes: /api/reflections/:id
+  if (url.pathname.startsWith("/api/reflections/")) {
+    return reflectionsHandler(req);
   }
 
   // CORS preflight

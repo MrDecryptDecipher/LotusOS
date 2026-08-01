@@ -1,5 +1,5 @@
 import { getDb } from "../db.js";
-import { getOpenAI } from "../lib/openai.js";
+import { getAI, CHAT_MODEL } from "../lib/openai.js";
 import { retrieveMemories } from "./memory.js";
 import { safetyCheck } from "./safety.js";
 
@@ -83,9 +83,9 @@ export async function streamChat(params: {
       { role: "user", content: message },
     ];
 
-    // 5. Stream from OpenAI
-    const stream = await getOpenAI().chat.completions.create({
-      model: "gpt-4o-mini",
+    // 5. Stream from NVIDIA NIM
+    const stream = await getAI().chat.completions.create({
+      model: CHAT_MODEL,
       messages: messages as never,
       stream: true,
     });
@@ -126,6 +126,18 @@ export async function streamChat(params: {
       UPDATE conversations SET updated_at = now() WHERE id = ${conversationId}`;
 
     onComplete(finalResponse);
+
+    // 8. Fire-and-forget: extract memories every 5 messages
+    const totalMessages = history.length + 2; // +2 for user+assistant just saved
+    if (totalMessages % 5 === 0) {
+      import("./reflection.js")
+        .then(({ extractMemories }) =>
+          extractMemories({ userId, conversationId }),
+        )
+        .catch(() => {
+          // Fire-and-forget: never block or throw on memory extraction failure
+        });
+    }
   } catch (err) {
     onError(err instanceof Error ? err : new Error(String(err)));
   }
@@ -134,8 +146,8 @@ export async function streamChat(params: {
 export async function generateTitle(params: {
   firstMessage: string;
 }): Promise<string> {
-  const response = await getOpenAI().chat.completions.create({
-    model: "gpt-4o-mini",
+  const response = await getAI().chat.completions.create({
+    model: CHAT_MODEL,
     messages: [
       {
         role: "system",

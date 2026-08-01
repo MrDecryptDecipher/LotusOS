@@ -1,14 +1,14 @@
 import { getDb } from "../db.js";
 import { memories } from "../db/schema.js";
-import { getOpenAI } from "../lib/openai.js";
+import { getAI, EMBEDDING_MODEL, EMBEDDING_DIMS } from "../lib/openai.js";
 
 export type Memory = typeof memories.$inferSelect;
 export type MemorySource = "conversation" | "reflection" | "journal" | "explicit";
 
 async function embed(input: string): Promise<number[]> {
   try {
-    const response = await getOpenAI().embeddings.create({ model: "text-embedding-3-small", input, dimensions: 1536 });
-    return response.data[0]?.embedding ?? (() => { throw new Error("OpenAI returned no embedding"); })();
+    const response = await getAI().embeddings.create({ model: EMBEDDING_MODEL, input });
+    return response.data[0]?.embedding ?? (() => { throw new Error("Embedding model returned no embedding"); })();
   } catch (error) {
     throw new Error(`Failed to generate memory embedding: ${error instanceof Error ? error.message : String(error)}`);
   }

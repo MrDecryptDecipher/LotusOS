@@ -11,8 +11,8 @@ import {
   vector,
 } from "drizzle-orm/pg-core";
 
-/** pgvector embedding, represented as a number[] in TypeScript. */
-export const embedding = vector("embedding", { dimensions: 1536 });
+/** pgvector embedding (BGE-M3: 1024 dimensions via NVIDIA NIM). */
+export const embedding = vector("embedding", { dimensions: 1024 });
 
 export const users = pgTable(
   "users",
