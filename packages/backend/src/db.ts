@@ -1,5 +1,7 @@
 import postgres from "postgres";
 
+export * from "./db/schema";
+
 let sql: ReturnType<typeof postgres> | null = null;
 
 export function getDb(): ReturnType<typeof postgres> {
