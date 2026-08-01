@@ -10,3 +10,48 @@
   body { @apply bg-[#fbfcf8] text-[#183b38] antialiased; }
   ::selection { background: #c5dfce; color: #183b38; }
 }
+
+/* ── Chat UI extras ── */
+
+/* Blinking cursor for streaming text */
+.cursor-blink {
+  animation: cursor-blink 1s step-end infinite;
+  color: #598879;
+}
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Prose styling for AI message markdown */
+.prose-aesthetic p {
+  margin-bottom: 0.5rem;
+}
+.prose-aesthetic p:last-child {
+  margin-bottom: 0;
+}
+.prose-aesthetic strong {
+  font-weight: 600;
+  color: #183b38;
+}
+.prose-aesthetic em {
+  font-style: italic;
+  color: #598879;
+}
+.prose-aesthetic code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85em;
+  background: rgba(0,0,0,0.05);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  color: #31564e;
+}
+
+/* Mobile sidebar slide-in */
+@keyframes slide-in {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in {
+  animation: slide-in 0.2s ease-out;
+}
