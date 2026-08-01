@@ -1,6 +1,7 @@
 import { healthHandler } from "./health.js";
 import { dbHealthHandler } from "./db-health.js";
 import { storeMemoryHandler, searchMemoriesHandler, listMemoriesHandler, consolidateHandler, decayHandler } from "./memories.js";
+import { conversationsHandler } from "./conversations.js";
 
 export type Handler = (
   req: Request
@@ -14,6 +15,9 @@ const routes: Record<string, Handler> = {
   "POST /api/memories/consolidate": consolidateHandler,
   "POST /api/memories/decay": decayHandler,
   "GET /api/memories": listMemoriesHandler,
+  // Static conversation routes (exact-match only; dynamic :id routes hit the prefix fallback below)
+  "POST /api/conversations": conversationsHandler,
+  "GET /api/conversations": conversationsHandler,
 };
 
 export function router(req: Request): Response | Promise<Response> {
@@ -21,6 +25,11 @@ export function router(req: Request): Response | Promise<Response> {
   const key = `${req.method} ${url.pathname}`;
   const handler = routes[key];
   if (handler) return handler(req);
+
+  // Dynamic conversation routes: /api/conversations/:id[/...]
+  if (url.pathname.startsWith("/api/conversations/")) {
+    return conversationsHandler(req);
+  }
 
   // CORS preflight
   if (req.method === "OPTIONS") {
