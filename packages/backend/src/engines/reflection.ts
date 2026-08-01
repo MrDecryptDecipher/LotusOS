@@ -1,5 +1,5 @@
 import { getDb } from "../db.js";
-import { getOpenAI } from "../lib/openai.js";
+import { getAI, CHAT_MODEL } from "../lib/openai.js";
 import { retrieveMemories, storeMemory } from "./memory.js";
 import type { Memory } from "./memory.js";
 import { reflections } from "../db/schema.js";
@@ -198,8 +198,8 @@ export async function generateReflection(params: {
     memories: relevantMemories,
   });
 
-  const response = await getOpenAI().chat.completions.create({
-    model: "gpt-4o-mini",
+  const response = await getAI().chat.completions.create({
+    model: CHAT_MODEL,
     messages: [
       { role: "system", content: "You are a structured reflection engine. Always respond with valid JSON only." },
       { role: "user", content: prompt },
@@ -209,7 +209,7 @@ export async function generateReflection(params: {
   });
 
   const raw = response.choices[0]?.message?.content;
-  if (!raw) throw new Error("OpenAI returned empty reflection response");
+  if (!raw) throw new Error("NIM returned empty reflection response");
 
   let parsed: {
     patterns: string[];
@@ -353,8 +353,8 @@ export async function generatePeriodicReflection(params: {
     period: params.period,
   });
 
-  const response = await getOpenAI().chat.completions.create({
-    model: "gpt-4o-mini",
+  const response = await getAI().chat.completions.create({
+    model: CHAT_MODEL,
     messages: [
       { role: "system", content: "You are a structured reflection engine. Always respond with valid JSON only." },
       { role: "user", content: prompt },
@@ -364,7 +364,7 @@ export async function generatePeriodicReflection(params: {
   });
 
   const raw = response.choices[0]?.message?.content;
-  if (!raw) throw new Error("OpenAI returned empty periodic reflection response");
+  if (!raw) throw new Error("NIM returned empty periodic reflection response");
 
   let parsed: {
     patterns: string[];
@@ -415,8 +415,8 @@ export async function extractMemories(params: {
 
   const prompt = buildMemoryExtractionPrompt({ messages });
 
-  const response = await getOpenAI().chat.completions.create({
-    model: "gpt-4o-mini",
+  const response = await getAI().chat.completions.create({
+    model: CHAT_MODEL,
     messages: [
       { role: "system", content: "You are a memory extraction engine. Always respond with valid JSON only." },
       { role: "user", content: prompt },
